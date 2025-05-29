@@ -232,21 +232,6 @@ END;
 /
 
 ----------------------------------------------------------------
---3 XỬ LÝ CẬP NHẬT PHÒNG
-----------------------------------------------------------------
-CREATE OR REPLACE TRIGGER CAPNHATPHONG
-AFTER INSERT ON HOADON
-FOR EACH ROW
-BEGIN
-    IF :NEW.MADVP IS NOT NULL THEN
-        UPDATE DVPHONG
-        SET TINHTRANG = 'Occupied'
-        WHERE MADVP = :NEW.MADVP;
-    END IF;
-END;
-/
-
-----------------------------------------------------------------
 --3 XỬ LÝ NGÀY
 ----------------------------------------------------------------
 CREATE OR REPLACE TRIGGER NGAYTAO_HOADON
