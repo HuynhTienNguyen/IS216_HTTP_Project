@@ -4,6 +4,8 @@
  */
 package hotelmanagement.add;
 
+import hotelmanagement.dashboard_main.DashboardStaff;
+import hotelmanagement.entity.Room;
 import hotelmanagement.entity.dba_connection;
 import java.text.ParseException;
 import java.time.LocalDate;
@@ -13,21 +15,25 @@ import javax.swing.*;
 import java.sql.*;
 import javax.swing.text.MaskFormatter;
 import java.text.SimpleDateFormat;
+import javax.swing.table.DefaultTableModel;
 /**
  *
  * @author dell
  */
 public class AddRoomForm extends javax.swing.JFrame {
 
-    /**
-     * Creates new form AddRoomForm
-     */
+    private DashboardStaff parent;
     public AddRoomForm() {
         setVisible(true);
         initComponents();
-        setLocationRelativeTo(null);
     }
 
+    public AddRoomForm(DashboardStaff parent){
+        setVisible(true);
+        initComponents();
+        setLocationRelativeTo(null);
+        this.parent = parent;
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -51,17 +57,17 @@ public class AddRoomForm extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
         jLabel1.setText("Add new Room");
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
 
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel3.setText("Type");
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
-        jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel4.setText("Describe");
+        jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
-        jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel5.setText("Price");
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
 
         txtType.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -124,7 +130,7 @@ public class AddRoomForm extends javax.swing.JFrame {
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
-                .addGap(127, 127, 127)
+                .addGap(136, 136, 136)
                 .addComponent(btnCreate)
                 .addGap(27, 27, 27)
                 .addComponent(btnBack)
@@ -151,14 +157,15 @@ public class AddRoomForm extends javax.swing.JFrame {
                     .addComponent(txtPrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(44, 44, 44)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(40, 40, 40)
+                .addGap(27, 27, 27)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnCreate)
                     .addComponent(btnBack))
-                .addContainerGap(57, Short.MAX_VALUE))
+                .addContainerGap(70, Short.MAX_VALUE))
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void txtTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTypeActionPerformed
@@ -175,30 +182,32 @@ public class AddRoomForm extends javax.swing.JFrame {
     
     private void btnCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateActionPerformed
         // TODO add your handling code here:
-        dba_connection connect = new dba_connection();        
+        dba_connection connect = new dba_connection();  
+        String sql = "INSERT INTO DVPHONG(LOAIPHONG, MOTA, DONGIA, TINHTRANG) VALUES (?, ?, ?, ?)";
+        
         String type = txtType.getText();
         String describe = txtDescribe.getText();
         int price = Integer.parseInt(txtPrice.getText());
         //String status = (String) cbxStatus.getSelectedItem();
-         
-        try {
-            
+        try {            
             Class.forName(connect.driver);
-            Connection con = DriverManager.getConnection(connect.url, connect.username, connect.password);
+            Connection con = DriverManager.getConnection(connect.url, connect.username, connect.password);           
+            PreparedStatement pst = null;
+            pst = con.prepareStatement(sql);           
+            pst.setString(1, type);
+            pst.setString(2, describe);
+            pst.setInt(3, price);
+            pst.setString(4, "Available");
+            pst.executeUpdate();
+            JOptionPane.showMessageDialog(this, "Add room sucessfully!");
+            pst.close();
+            
 
-            // Chèn dữ liệu vào cơ sở dữ liệu
-            String sql = "INSERT INTO DVPHONG(LOAIPHONG, MOTA, DONGIA, TINHTRANG) VALUES (?, ?, ?, ?)";
-            PreparedStatement pst = con.prepareStatement(sql);
-                pst.setString(1, type);
-                pst.setString(2, describe);
-                pst.setInt(3, price);
-                pst.setString(4, "Available");
-                pst.executeUpdate();
-                JOptionPane.showMessageDialog(this, "Add room sucessfully!");
-                
         } catch (ClassNotFoundException | SQLException ex) {
             JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage());
         }
+        if(this.parent != null)parent.autoReloadRoom();        
+               
         this.dispose();
     }//GEN-LAST:event_btnCreateActionPerformed
 

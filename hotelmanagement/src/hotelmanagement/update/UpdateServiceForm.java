@@ -14,6 +14,7 @@ import javax.swing.*;
 import java.sql.*;
 import javax.swing.text.MaskFormatter;
 import java.text.SimpleDateFormat;
+import hotelmanagement.dashboard_main.DashboardStaff;
 /**
  *
  * @author dell
@@ -23,12 +24,19 @@ public class UpdateServiceForm extends javax.swing.JFrame {
     /**
      * Creates new form AddRoomForm
      */
+    
+    private DashboardStaff parent;
     public UpdateServiceForm() {
         setVisible(true);
         initComponents();
         setLocationRelativeTo(null);
     }
-
+    public UpdateServiceForm(DashboardStaff parent){
+        setVisible(true);
+        initComponents();
+        setLocationRelativeTo(null);
+        this.parent = parent;
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -270,17 +278,17 @@ public class UpdateServiceForm extends javax.swing.JFrame {
                 pst.setString(5, serviceID);
                 int rowsUpdated = pst.executeUpdate();
             if (rowsUpdated > 0) {
-                JOptionPane.showMessageDialog(null, "Cập nhật thông tin thành công!");
+                JOptionPane.showMessageDialog(null, "Update sucessfully!");
             } 
             else {
-                JOptionPane.showMessageDialog(null, "Không tìm thấy bản ghi để cập nhật.");
+                JOptionPane.showMessageDialog(null, "Record not found.");
             }
 
         // Đóng kết nối
             con.close();
             
         } catch (ClassNotFoundException | SQLException ex) {
-            JOptionPane.showMessageDialog(null, "Lỗi khi cập nhật dữ liệu: " + ex.getMessage());
+            JOptionPane.showMessageDialog(null, "Cannot update data: " + ex.getMessage());
         }
     }//GEN-LAST:event_btnUpdateActionPerformed
 
@@ -332,7 +340,7 @@ public class UpdateServiceForm extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCheckActionPerformed
 
     private void btnBackActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBackActionPerformed
-        // TODO add your handling code here:
+        parent.autoReloadService();
         this.dispose();
     }//GEN-LAST:event_btnBackActionPerformed
 

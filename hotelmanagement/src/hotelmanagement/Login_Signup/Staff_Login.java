@@ -5,7 +5,7 @@
 package hotelmanagement.Login_Signup;
 
 import hotelmanagement.entity.dba_connection;
-import hotelmanagement.dashboard_main.DashboardForm;
+import hotelmanagement.dashboard_main.DashboardStaff;
 import java.sql.*;
 import java.awt.event.ActionEvent;
 import java.util.logging.Level;
@@ -193,8 +193,8 @@ public class Staff_Login extends javax.swing.JFrame {
 
             ResultSet rs = pst.executeQuery();
             if(rs.next()){
-                JOptionPane.showMessageDialog(this, "Logined!");
-                DashboardForm dbf = new DashboardForm();
+                JOptionPane.showMessageDialog(this, "Login Successfully!");
+                DashboardStaff dbf = new DashboardStaff();
                 dbf.setVisible(true);
                 this.dispose();
             }else{
